@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import styled from "styled-components";
 
 function App() {
+  const [contents, setContents] = useState();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Continer>
+      <NavBar>
+        <div>home</div>
+        <div>간식대장</div>
+        <div>최애간식</div>
+        <div>붕어빵</div>
+      </NavBar>
+      <Body>{contents}</Body>
+    </Continer>
   );
 }
 
 export default App;
+
+const Continer = ``;
+const NavBar = styled.div``;
+const Body = styled.div``;
