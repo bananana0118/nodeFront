@@ -1,16 +1,19 @@
 //css in js
 import { useEffect, useRef, useState } from "react";
-
+import axios from "axios";
 import styled from "styled-components";
+import { api } from "./api/api";
 function delay() {
   // 여기에 딜레이 이후 실행될 코드 작성
   setTimeout(() => {}, 500); // 500 밀리초(0.5초) 후에 delayedFunction 호출
 }
 
-export const MyInput = () => {
+export const MyInput = ({ value, id, label, onLoad }) => {
   const inputEl = useRef(null);
+  const [click, setClick] = useState(false);
 
   const handleClick = (e) => {
+    setClick(true);
     console.dir(e.target, { depth: null });
     const range = document.createRange();
     const selection = window.getSelection();
@@ -46,36 +49,32 @@ export const MyInput = () => {
     return caretOffset;
   };
 
+  const onBlurHandler = async (e) => {
+    const value = inputEl.current.innerText;
+    if (click) {
+      const res = await api.post("/posts/update", { id, key: label, value });
+      console.log(label);
+      setClick(false);
+    }
+    onLoad();
+  };
+
   return (
     <div>
       <EditInput
         ref={inputEl}
         contentEditable="true"
         onClick={handleClick}
+        onBlur={onBlurHandler}
         style={{ border: "1px solid #ccc", minHeight: "50px", padding: "8px" }}
       >
-        Click me to move the cursor.
+        {value}
       </EditInput>
     </div>
   );
 };
 
-const Row = styled.div`
-  width: 150px;
-  height: 50px;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 10%;
-  box-sizing: border-box;
-  padding: 10px;
-  border: 1px solid black;
-`;
-
 const EditInput = styled.div`
-  width: 150px;
-  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;

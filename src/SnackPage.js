@@ -38,6 +38,12 @@ export default function SnackPage() {
   useEffect(() => {
     onLoad();
   }, []);
+
+  const onClickHandler = (e) => {
+    console.log(e.target.id);
+    console.log("dasdasdas");
+    setEditStatus(e.target.id);
+  };
   console.log(snackList);
   return (
     !!snackList && (
@@ -71,9 +77,19 @@ export default function SnackPage() {
             <Row>삭제</Row>
             {snackList.map((snack, id) => (
               <>
-                <MyInput value={snack.name} />
-                <MyInput value={snack.link} />
-                <MyInput value={dateConvert(snack.date)} />
+                <MyInput
+                  value={snack.name}
+                  id={snack.id}
+                  label={"name"}
+                  onLoad={onLoad}
+                />
+                <MyInput
+                  value={snack.link}
+                  id={snack.id}
+                  label={"link"}
+                  onLoad={onLoad}
+                />
+                <Row id={snack.id}>{dateConvert(snack.date)} </Row>
                 <Row>
                   <DeleteButton id={snack.id} onClick={onClickDeleteSnack}>
                     X
