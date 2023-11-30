@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { api } from "./api/api";
+import { MyInput } from "./MyInput";
 export default function SnackPage() {
   const [snackInfo, setSnackInfo] = useState({});
   const [snackList, setSnackList] = useState([]);
+  const [editStatus, setEditStatus] = useState(0);
   const onChangeSnackInfo = (e) => {
     setSnackInfo((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
   const onLoad = async () => {
-    const result = await api.post("/tests/load");
-
+    const result = await api.post("/posts/read");
+    console.log(result.data.data);
     setSnackList([...result.data.data]);
   };
 
   const onClickAddSnack = async () => {
-    const res = await api.post("/tests/add", snackInfo);
+    const res = await api.post("/posts/write", snackInfo);
     onLoad();
     console.log(res.data);
   };
 
   const onClickDeleteSnack = async (e) => {
     console.log(e.target.id);
-    await api.post("/tests/delete", { id: e.target.id });
+    await api.post("/posts/delete", { id: e.target.id });
     onLoad();
   };
 
@@ -67,11 +69,11 @@ export default function SnackPage() {
             <Row>링크</Row>
             <Row>날짜</Row>
             <Row>삭제</Row>
-            {snackList.map((snack) => (
+            {snackList.map((snack, id) => (
               <>
-                <Row>{snack.name}</Row>
-                <Row>{snack.link}</Row>
-                <Row>{dateConvert(snack.date)}</Row>
+                <MyInput value={snack.name} />
+                <MyInput value={snack.link} />
+                <MyInput value={dateConvert(snack.date)} />
                 <Row>
                   <DeleteButton id={snack.id} onClick={onClickDeleteSnack}>
                     X
@@ -96,7 +98,8 @@ const Row = styled.div`
   justify-content: center;
   align-items: center;
   gap: 10%;
-  padding: 1rem;
+  box-sizing: border-box;
+  padding: 10px;
   border: 1px solid black;
 `;
 
